@@ -15,11 +15,23 @@ Ao executar o projeto pela primeira vez será criado o Banco de Dados e um usuá
 ## CADASTRO DE CLIENTES 
 
  - MANUAL
-   Ao cadastrar um Cliente será enviado um e-mail com um link que redireciona para criação de uma Senha.
+   
+   - Ao cadastrar um Cliente será enviado um e-mail com um link que redireciona para criação de uma Senha.
 
-MASSIVO
-
- - Colunas: Nome;RazaoSocial;Email;CNPJ;TelefoneComercial;TelefoneCelular;CEP;Cidade;Estado
- 
-   OBS: O Telefone deve conter DDD e o estado é apenas a UF. 
-        Ao cadastrar um Cliente será enviado um e-mail com um link que redireciona para criação de uma Senha.
+ - MASSIVO
+   
+      | Coluna             | Descrição                           |
+      | ------------------ | ----------------------------------- |
+      | Nome               | Texto - Nome do cliente             |
+      | RazaoSocial        | Texto - Nome da empresa             |
+      | Email              | Texto - E-mail do cliente           |
+      | CNPJ               | Texto - CNPJ da empresa             |
+      | TelefoneComercial  | Texto - Telefone comercial (com DDD)|
+      | TelefoneCelular    | Texto - Telefone celular (com DDD)  |
+      | CEP                | Texto - CEP                         |
+      | Cidade             | Texto - Cidade                      | 
+      | Estado             | Texto - Estado (UF)                 |
+   
+   
+   - Ao cadastrar um Cliente será enviado um e-mail com um link que redireciona para criação de uma Senha. 
+   
