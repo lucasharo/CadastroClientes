@@ -1,0 +1,112 @@
+﻿@{
+    @model IEnumerable<CadastroClientes.Models.ApplicationUser>
+        
+    ViewData["Title"] = "Index";
+    
+    @inject SignInManager<ApplicationUser> SignInManager
+    @inject UserManager<ApplicationUser> UserManager
+    
+    IList<string> roles = new List<string>();
+
+    if (SignInManager.IsSignedIn(User))
+    {
+        roles = await UserManager.GetRolesAsync(UserManager.Users.SingleOrDefault(x => x.UserName == UserManager.GetUserName(User)));
+    }
+
+    <h2>Clientes</h2>
+
+    <p>
+        <a asp-action="Create">Cadastrar Cliente</a>
+    </p>
+    <form method="post" enctype="multipart/form-data" asp-controller="Clientes" asp-action="UploadFile">
+        <div class="row">
+            <div class="col-md-10">
+                <div class="form-group">
+                    <p>Importar Clientes por arquivo CSV:</p>
+                    <span class="field-validation-valid text-danger"> @ViewBag.Error</span>
+                    <input type="file" name="file" value="Selecionar Arquivo CSV" />
+                </div>
+            </div>
+            <div class="col-md-10">
+                <div class="form-group">
+                    <input type="submit" value="Importar" />
+                </div>
+            </div>
+        </div>
+    </form>
+    <table class="table">
+        <thead>
+            <tr>
+                <th>
+                    @Html.DisplayNameFor(model => model.Nome)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.RazaoSocial)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Email)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.CNPJ)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.TelefoneComercial)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.TelefoneCelular)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.CEP)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Cidade)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Estado)
+                </th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Nome)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.RazaoSocial)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Email)
+                    </td>
+                    <td class="cnpj">
+                        @Html.DisplayFor(modelItem => item.CNPJ)
+                    </td>
+                    <td class="telefone">
+                        @Html.DisplayFor(modelItem => item.TelefoneComercial)
+                    </td>
+                    <td class="telefone">
+                        @Html.DisplayFor(modelItem => item.TelefoneCelular)
+                    </td>
+                    <td class="cep">
+                        @Html.DisplayFor(modelItem => item.CEP)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Cidade)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Estado)
+                    </td>
+                    <td>
+                        <a asp-action="Details" asp-route-id="@item.Id">Detalhes</a> |
+                        @if (roles.Where(x => x == "Vendedor").Any())
+                        {
+                            <a asp-action="Edit" asp-route-id="@item.Id">Editar</a>
+                        }
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
