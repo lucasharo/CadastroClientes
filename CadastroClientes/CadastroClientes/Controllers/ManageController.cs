@@ -13,6 +13,7 @@ using Microsoft.Extensions.Options;
 using CadastroClientes.Models;
 using CadastroClientes.Models.ManageViewModels;
 using CadastroClientes.Services;
+using Microsoft.EntityFrameworkCore;
 
 namespace CadastroClientes.Controllers
 {
@@ -54,54 +55,50 @@ namespace CadastroClientes.Controllers
                 throw new ApplicationException($"Unable to load user with ID '{_userManager.GetUserId(User)}'.");
             }
 
-            var model = new IndexViewModel
-            {
-                Username = user.UserName,
-                Email = user.Email,
-                PhoneNumber = user.PhoneNumber,
-                IsEmailConfirmed = user.EmailConfirmed,
-                StatusMessage = StatusMessage
-            };
+            user.StatusMessage = StatusMessage;
 
-            return View(model);
+            return View(user);
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Index(IndexViewModel model)
+        public async Task<IActionResult> Index(ApplicationUser cliente)
         {
-            if (!ModelState.IsValid)
+            if (ModelState.IsValid)
             {
-                return View(model);
-            }
-
-            var user = await _userManager.GetUserAsync(User);
-            if (user == null)
-            {
-                throw new ApplicationException($"Unable to load user with ID '{_userManager.GetUserId(User)}'.");
-            }
-
-            var email = user.Email;
-            if (model.Email != email)
-            {
-                var setEmailResult = await _userManager.SetEmailAsync(user, model.Email);
-                if (!setEmailResult.Succeeded)
+                try
                 {
-                    throw new ApplicationException($"Unexpected error occurred setting email for user with ID '{user.Id}'.");
+                    var user = await _userManager.GetUserAsync(User);
+
+                    var roles = await _userManager.GetRolesAsync(user);
+
+                    user.Nome = cliente.Nome;
+
+                    if (!roles.Where(x => x == "Vendedor").Any())
+                    {
+                        user.RazaoSocial = cliente.RazaoSocial;
+                        user.TelefoneComercial = Util.SomenteNumero(cliente.TelefoneComercial);
+                        user.TelefoneCelular = Util.SomenteNumero(cliente.TelefoneCelular);
+                        user.CEP = Util.SomenteNumero(cliente.CEP);
+                        user.Cidade = cliente.Cidade;
+                        user.Estado = cliente.Estado;
+                    }
+
+                    await _userManager.UpdateAsync(user);
+                }
+                catch (Exception ex)
+                {
+                    if (!ClienteExists(cliente.Id))
+                    {
+                        return NotFound();
+                    }
+                    else
+                    {
+                        throw;
+                    }
                 }
             }
-
-            var phoneNumber = user.PhoneNumber;
-            if (model.PhoneNumber != phoneNumber)
-            {
-                var setPhoneResult = await _userManager.SetPhoneNumberAsync(user, model.PhoneNumber);
-                if (!setPhoneResult.Succeeded)
-                {
-                    throw new ApplicationException($"Unexpected error occurred setting phone number for user with ID '{user.Id}'.");
-                }
-            }
-
-            StatusMessage = "Your profile has been updated";
+            StatusMessage = "Perfil atualizado com sucesso.";
             return RedirectToAction(nameof(Index));
         }
 
@@ -172,7 +169,7 @@ namespace CadastroClientes.Controllers
 
             await _signInManager.SignInAsync(user, isPersistent: false);
             _logger.LogInformation("User changed their password successfully.");
-            StatusMessage = "Your password has been changed.";
+            StatusMessage = "Senha atualizada com sucesso.";
 
             return RedirectToAction(nameof(ChangePassword));
         }
@@ -462,6 +459,11 @@ namespace CadastroClientes.Controllers
             _logger.LogInformation("User with ID {UserId} has generated new 2FA recovery codes.", user.Id);
 
             return View(model);
+        }
+
+        private bool ClienteExists(string id)
+        {
+            return _userManager.Users.Any(e => e.Id == id);
         }
 
         #region Helpers

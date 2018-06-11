@@ -15,7 +15,7 @@ namespace CadastroClientes.Services
                 $"Please confirm your account by clicking this link: <a href='{HtmlEncoder.Default.Encode(link)}'>link</a>");
         }
 
-        public static Task SendEmailRegisterAsync(this IEmailSender emailSender, string email, string nome, string userName, string code, string callbackUrl)
+        public static Task SendEmailRegisterAsync(this IEmailSender emailSender, string email, string nome, string userName, string callbackUrl)
         {
             return emailSender.SendEmailAsync(email, "Cadastrar Senha",
                $"Seja bem vindo, {nome}!!!" +
@@ -25,6 +25,12 @@ namespace CadastroClientes.Services
                $"<br>" +
                $"<br>" +
                $"Por favor, click no link para cadastrar uma senha: <a href='{callbackUrl}'>link</a>");
+        }
+
+        public static Task SendEmailResetPasswordAsync(this IEmailSender emailSender, string email, string callbackUrl)
+        {
+            return emailSender.SendEmailAsync(email, "Resetar Senha",
+               $"Por favor, click no link para resetar sua senha: <a href='{callbackUrl}'>link</a>");
         }
     }
 }

@@ -5,23 +5,21 @@
 @inject SignInManager<ApplicationUser> SignInManager
 @inject UserManager<ApplicationUser> UserManager
 
-@if (SignInManager.IsSignedIn(User))
-{
-<h2>Seja bem vindo, @UserManager.Users.SingleOrDefault(x => x.UserName == @UserManager.GetUserName(User)).Nome!</h2>
-}
-else
-{
-    <div class="row">
-        <div class="col-md-3">
-            <h2>Clientes</h2>
-        </div>
+
+<section class="jumbotron text-center">
+    <div class="container">
+        @if (SignInManager.IsSignedIn(User))
+        {
+            <h2>Seja bem vindo, @UserManager.Users.SingleOrDefault(x => x.UserName == @UserManager.GetUserName(User)).Nome!</h2>
+        }
+        else
+        {
+            <h1 class="jumbotron-heading">Seja bem vido!</h1>
+            <p class="lead text-muted">Escolha uma das opções para continuar</p>
+            <p>
+                <a class="btn btn-primary" asp-area="" asp-controller="Account" asp-action="Register">Realizar Cadastro</a>
+                <a class="btn btn-success" asp-area="" asp-controller="Account" asp-action="Login">Realizar Login</a>
+            </p>
+        }
     </div>
-    <div class="row">
-        <div class="col-md-3">
-            <a class="btn btn-primary" asp-area="" asp-controller="Account" asp-action="Register">Realizar Cadastro</a>
-        </div>
-        <div class="col-md-3">
-            <a class="btn btn-success" asp-area="" asp-controller="Account" asp-action="Login">Realizar Login</a>
-        </div>
-    </div>
-}
+</section>

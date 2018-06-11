@@ -254,7 +254,7 @@ namespace CadastroClientes.Controllers
 
                         var code = await _userManager.GeneratePasswordResetTokenAsync(user);
                         var callbackUrl = Url.CreatePasswordCallbackLink(user.Id, code, Request.Scheme);
-                        await _emailSender.SendEmailRegisterAsync(user.Email, user.RazaoSocial, user.UserName, code, callbackUrl);
+                        await _emailSender.SendEmailRegisterAsync(user.Email, user.RazaoSocial, user.UserName, callbackUrl);
 
                         TempData["Success"] = "Cadastro realizado com sucesso, por favor consulte seu E-mail para cadastrar uma senha";
 
@@ -393,8 +393,8 @@ namespace CadastroClientes.Controllers
                 // visit https://go.microsoft.com/fwlink/?LinkID=532713
                 var code = await _userManager.GeneratePasswordResetTokenAsync(user);
                 var callbackUrl = Url.ResetPasswordCallbackLink(user.Id, code, Request.Scheme);
-                await _emailSender.SendEmailAsync(model.Email, "Reset Password",
-                   $"Please reset your password by clicking here: <a href='{callbackUrl}'>link</a>");
+                await _emailSender.SendEmailResetPasswordAsync(user.Email, callbackUrl);
+
                 return RedirectToAction(nameof(ForgotPasswordConfirmation));
             }
 

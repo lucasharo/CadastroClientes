@@ -6,6 +6,6 @@
     "jquery": "2.2.0",
     "jquery-validation": "1.14.0",
     "jquery-validation-unobtrusive": "3.2.6",
-	"jquery-mask": "1.14.15"
+	  "jquery-mask": "1.14.15"
   }
 }

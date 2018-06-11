@@ -66,8 +66,6 @@ namespace CadastroClientes
                     name: "default",
                     template: "{controller=Home}/{action=Index}/{id?}");
             });
-
-            //initDB.IniciarBanco().Wait();
         }
 
         private async Task InitializeDatabase(IApplicationBuilder app)

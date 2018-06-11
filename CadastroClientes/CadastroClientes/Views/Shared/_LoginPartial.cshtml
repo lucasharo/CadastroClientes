@@ -10,7 +10,7 @@
     <form asp-area="" asp-controller="Account" asp-action="Logout" method="post" id="logoutForm" class="navbar-right">
         <ul class="nav navbar-nav navbar-right">
             <li>
-                <a asp-area="" title="Manage">
+                <a asp-area="" asp-controller="Manage" asp-action="Index" title="Manage">
                     @UserManager.Users.SingleOrDefault(x => x.UserName == UserManager.GetUserName(User)).Nome
                 </a>
             </li>

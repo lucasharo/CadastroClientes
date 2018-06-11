@@ -126,7 +126,7 @@ namespace CadastroClientes.Controllers
 
                 var code = await _userManager.GeneratePasswordResetTokenAsync(user);
                 var callbackUrl = Url.CreatePasswordCallbackLink(user.Id, code, Request.Scheme);
-                await _emailSender.SendEmailRegisterAsync(user.Email, user.RazaoSocial, user.UserName, code, callbackUrl);
+                await _emailSender.SendEmailRegisterAsync(user.Email, user.RazaoSocial, user.UserName, callbackUrl);
             }
 
             return result;

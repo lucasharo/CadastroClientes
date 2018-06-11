@@ -1,44 +1,83 @@
-﻿@model IndexViewModel
-@{
-    ViewData["Title"] = "Profile";
-    ViewData.AddActivePage(ManageNavPages.Index);
-}
+﻿@{
+    @inject SignInManager<ApplicationUser> SignInManager
+    @inject UserManager<ApplicationUser> UserManager
 
-<h4>@ViewData["Title"]</h4>
-@Html.Partial("_StatusMessage", Model.StatusMessage)
-<div class="row">
-    <div class="col-md-6">
-        <form method="post">
-            <div asp-validation-summary="All" class="text-danger"></div>
-            <div class="form-group">
-                <label asp-for="Username"></label>
-                <input asp-for="Username" class="form-control" disabled />
-            </div>
-            <div class="form-group">
-                <label asp-for="Email"></label>
-                @if (Model.IsEmailConfirmed)
+
+    IList<string> roles = new List<string>();
+
+    if (SignInManager.IsSignedIn(User))
+    {
+        roles = await UserManager.GetRolesAsync(UserManager.Users.SingleOrDefault(x => x.UserName == UserManager.GetUserName(User)));
+    }
+
+    @model ApplicationUser
+    ViewData["Title"] = "Perfil";
+    ViewData.AddActivePage(ManageNavPages.Index);
+
+    <h4>@ViewData["Title"]</h4>
+    @Html.Partial("_StatusMessage", Model.StatusMessage)
+    <div class="row">
+        <div class="col-md-6">
+            <form method="post">
+                <div asp-validation-summary="All" class="text-danger"></div>
+                <div class="form-group">
+                    <label asp-for="UserName" class="control-label"></label>
+                    <input asp-for="UserName" class="form-control cnpj" readonly />
+                    <span asp-validation-for="UserName" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="Email" class="control-label"></label>
+                    <input asp-for="Email" class="form-control cnpj" readonly />
+                    <span asp-validation-for="Email" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="Nome" class="control-label"></label>
+                    <input asp-for="Nome" class="form-control" />
+                    <span asp-validation-for="Nome" class="text-danger"></span>
+                </div>
+                @if (!roles.Where(x => x == "Vendedor").Any())
                 {
-                    <div class="input-group">
-                        <input asp-for="Email" class="form-control" />
-                        <span class="input-group-addon" aria-hidden="true"><span class="glyphicon glyphicon-ok text-success"></span></span>
+                    <div class="form-group">
+                        <label asp-for="RazaoSocial" class="control-label"></label>
+                        <input asp-for="RazaoSocial" class="form-control" />
+                        <span asp-validation-for="RazaoSocial" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="CNPJ" class="control-label"></label>
+                        <input asp-for="CNPJ" class="form-control cnpj" readonly />
+                        <span asp-validation-for="CNPJ" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="TelefoneComercial" class="control-label"></label>
+                        <input asp-for="TelefoneComercial" class="form-control telefone" />
+                        <span asp-validation-for="TelefoneComercial" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="TelefoneCelular" class="control-label"></label>
+                        <input asp-for="TelefoneCelular" class="form-control telefone" />
+                        <span asp-validation-for="TelefoneCelular" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="CEP" class="control-label"></label>
+                        <input asp-for="CEP" class="form-control cep" />
+                        <span asp-validation-for="CEP" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="Cidade" class="control-label"></label>
+                        <input asp-for="Cidade" class="form-control" />
+                        <span asp-validation-for="Cidade" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="Estado" class="control-label"></label>
+                        <input asp-for="Estado" class="form-control uf" />
+                        <span asp-validation-for="Estado" class="text-danger"></span>
                     </div>
                 }
-                else
-                {
-                    <input asp-for="Email" class="form-control" />
-                    <button asp-action="SendVerificationEmail" class="btn btn-link">Send verification email</button>
-                }
-                <span asp-validation-for="Email" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="PhoneNumber"></label>
-                <input asp-for="PhoneNumber" class="form-control" />
-                <span asp-validation-for="PhoneNumber" class="text-danger"></span>
-            </div>
-            <button type="submit" class="btn btn-default">Save</button>
-        </form>
+                <button type="submit" class="btn btn-default">Salvar</button>
+            </form>
+        </div>
     </div>
-</div>
+}
 
 @section Scripts {
     @await Html.PartialAsync("_ValidationScriptsPartial")
