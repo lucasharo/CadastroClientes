@@ -4,8 +4,8 @@
 
 Ao executar o projeto pela primeira vez será criado o Banco de Dados e um usuário Admin.
 
-Usuário: Admin
-Senha: Admin@Teste123
+ - Usuário: Admin
+ - Senha: Admin@Teste123
 
 ## MODULOS
 
